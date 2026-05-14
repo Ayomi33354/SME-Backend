@@ -159,6 +159,7 @@ const verifyToken = async (req, res, next) => {
 
     }
 }
+
 module.exports = {
     AdminSignUp,
     AdminSignIn,
