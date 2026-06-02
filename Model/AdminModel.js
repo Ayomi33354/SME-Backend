@@ -26,9 +26,9 @@ const adminSchema = new mongoose.Schema(
             default: "super_admin",
         },
 
-        // profileImage: {
-        //     type: String,
-        // },
+        profileImage: {
+            type: String,
+        },
 
         isActive: {
             type: Boolean,

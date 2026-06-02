@@ -20,10 +20,19 @@ const AdminSignUp = async (req, res, next) => {
 
     try {
 
+
+        const adminProfileImage = req.file
+        if (!adminProfileImage) {
+            return res.status(400).json({
+                Message: "No Image File Found",
+                Status: "Error"
+            })
+        }
+
         const salt = await bcrypt.genSalt(10)
         const hashedPassword = await bcrypt.hash(password, salt)
 
-        const admin = await AdminModel.create({ ...req.body, password: hashedPassword })
+        const admin = await AdminModel.create({ ...req.body, password: hashedPassword, profileImage: adminProfileImage.path })
 
         if (!admin) {
             return res.status(400).json({
@@ -40,7 +49,8 @@ const AdminSignUp = async (req, res, next) => {
             createdAt: admin?.createdAt,
             updatedAt: admin?.updatedAt,
             role: admin?.role,
-            isActive: admin?.isActive
+            isActive: admin?.isActive,
+            profileImage: admin?.profileImage
         }
 
         return res.status(201).json({
@@ -70,7 +80,7 @@ const AdminSignIn = async (req, res, next) => {
                 Message: "Email or password Incorrect",
                 Status: "Error"
             })
-        }
+        }     
 
 
 
@@ -89,7 +99,8 @@ const AdminSignIn = async (req, res, next) => {
             createdAt: admin?.createdAt,
             updatedAt: admin?.updatedAt,
             role: admin?.role,
-            isActive: admin?.isActive
+            isActive: admin?.isActive,
+            profileImage: admin?.profileImage
         }
 
 

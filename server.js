@@ -24,9 +24,10 @@ app.listen(port, () => {
     console.log(`Port Running at http://localhost:${port}`);
 })
 
+app.use(cors())
 
 app.use(express.json())
-app.use(cors())
+app.use(express.urlencoded({ extended: true }))
 app.use(morgan("dev"))
 
 app.use("/admin", AdminRouter)
