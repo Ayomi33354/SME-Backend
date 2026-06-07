@@ -2,18 +2,20 @@ const supplierModel = require("../Model/SupplierModel");
 
 
 
+
+
 const AddSupplier = async (req, res, next) => {
     try {
         const { supplierName, email, phoneNumber, address, companyName } = req.body;
 
-        if (!supplierName || !phoneNumber || !email || !address || !companyName) {
-            return res.status(400).json({
-                Message: "All fields are required",
-                Status: "Error",
-            });
-        }
+        // if (!supplierName || !phoneNumber || !email || !address || !companyName) {
+        //     return res.status(400).json({
+        //         Message: "All fields are required",
+        //         Status: "Error",
+        //     });
+        // }
 
-        const existingSupplier = await supplierModel.findOne({ phoneNumber });
+        const existingSupplier = await supplierModel.findOne({ email });
 
         if (existingSupplier) {
             return res.status(409).json({
@@ -23,21 +25,28 @@ const AddSupplier = async (req, res, next) => {
         }
 
         const supplier = await supplierModel.create({
-            ...req.body
-        });
+            ...req.body    
+        });           
+
+        if (!supplier) {
+            return res.status(400).json({
+                Message: "Failed to create Supplier Profile",
+                Status: "Error"
+            })
+        }
 
         return res.status(201).json({
-            Message: "Supplier created successfully",
+            Message: "Supplier Profile created successfully",
             Status: "Success",
-            supplier,
+            supplier,         
         });
 
     } catch (error) {
         console.log(error);
         next(error);
-    }
+    }                   
 };
-
+    
 const getSuppliers = async (req, res, next) => {
     try {
         const suppliers = await supplierModel.find();
@@ -57,7 +66,7 @@ const getSuppliers = async (req, res, next) => {
         });
     } catch (error) {
         console.log(error);
-        next(error);
+        next(error);                  
     }
 };
 
@@ -82,7 +91,7 @@ const getSingleSupplier = async (req, res, next) => {
         });
     } catch (error) {
         console.log(error);
-        next(error);
+        next(error);     
     }
 };
 

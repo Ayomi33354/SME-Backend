@@ -18,10 +18,10 @@ const postProduct = async (req, res, next) => {
             expiryDate,
             minimumStockLevel,
         } = req.body;
-       
+
         const productImg = req.file;
 
-        if (!productImg) {   
+        if (!productImg) {
             return res.status(400).json({
                 Message: "Product image is required",
             });
@@ -101,8 +101,93 @@ const getAllProduct = async (req, res, next) => {
 
     }
 }
+
+
+
+const updateProduct = async (req, res, next) => {
+
+    const { id } = req.params;
+
+    if (req.file) {
+        req.body.productImage = req.file.path;
+    }
+    try {
+        const updateData = { ...req.body }
+
+        const product = await productModel.findByIdAndUpdate(id, updateData, { returnDocument: "after", runValidators: true })
+
+        if (!product) {
+            return res.status(400).json({
+                Message: "Product Not Found, Unable to update product",
+                Status: "Error"
+            })
+        }
+
+        return res.status(200).json({
+            Message: "Product Updated Successfully",
+            Status: "Success",
+            product
+        })
+    } catch (error) {
+        console.log(error);
+        next(error)
+
+    }
+}
+
+
+
+const singleProduct = async (req, res, next) => {
+    const { productId } = req.params
+    try {
+        const product = await productModel.findById(productId)
+
+        if (!product) {
+            return res.status(404).json({
+                Message: "Product Not Found",
+                Status: "Error"
+            })
+        }
+
+        return res.status(200).json({
+            Message: "Product Fetched Successfully",
+            Status: "Success",
+            product
+        })
+
+    } catch (error) {
+        console.log(error);
+        next(error)
+    }
+}
+
+const deleteproduct = async (req, res, next) => {
+    const { productId } = req.params
+    try {
+        const product = await productModel.findByIdAndDelete(productId)
+
+        if (!product) {
+            return res.status(400).json({
+                Message: "Unable to delete Properties",
+                Status: "Error"
+            })
+        }
+
+        return res.status(200).json({
+            Message: "Product deleted successfully",
+            Status: "Success"
+        })
+    } catch (error) {
+        console.log(error);
+        next(error)
+
+    }
+}
 module.exports = {
     postProduct,
-    getAllProduct
+    getAllProduct,
+    singleProduct,
+    updateProduct,
+    deleteproduct
 
 }
